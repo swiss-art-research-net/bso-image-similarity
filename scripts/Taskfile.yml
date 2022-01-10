@@ -1,0 +1,17 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  ENDPOINT: http://blazegraph:8080/blazegraph/sparql
+  PASTEC_HOST: pastec
+  PASTEC_PORT: 4212
+
+tasks:
+  populate-index:
+    desc: Populate the Pastec index with image data from  BSO
+    vars:
+      DATAFILE: /data/imageData.csv
+      LIMIT: 99999
+    cmds:
+      - python populateIndex.py --endpoint {{.ENDPOINT}} --pastecHost {{.PASTEC_HOST}} --pastecPort {{.PASTEC_PORT}} --datafile {{.DATAFILE}} --limit {{.LIMIT}}
