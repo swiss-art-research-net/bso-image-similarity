@@ -1,0 +1,14 @@
+version: "3.7"
+services:
+  pastec:
+    container_name: ${PROJECT_NAME}_pastec
+    image: swissartresearx/pastec:latest
+    restart: unless-stopped
+    volumes:
+      - ./pastec-index:/pastec/build/pastec-index
+
+  jobs:
+    build: ./services/jobs
+    container_name: ${PROJECT_NAME}_jobs
+    volumes:
+      - ./scripts:/scripts
