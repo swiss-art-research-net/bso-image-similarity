@@ -57,6 +57,14 @@ class PastecConnection:
         return {"image_id" : ret["image_id"],
                 "nb_features_extracted" : ret["nb_features_extracted"]}
 
+    def indexImageUrl(self, imageId, imageUrl):
+        data = {"url": imageUrl}
+        ret = self.request("index/images/" + str(imageId), "POST", json.dumps(data).encode('utf-8'))
+        self.raiseExceptionIfNeeded(ret["type"])
+        return {"image_id" : ret["image_id"],
+                "nb_features_extracted" : ret["nb_features_extracted"]}
+
+
     def removeImage(self, imageId):
         ret = self.request("index/images/" + str(imageId), "DELETE")
         self.raiseExceptionIfNeeded(ret["type"])
