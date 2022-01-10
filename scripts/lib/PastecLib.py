@@ -67,7 +67,7 @@ class PastecConnection:
         print(ret)
         self.raiseExceptionIfNeeded(ret["type"])
 
-    def remvoveTag(self, imageId):
+    def removeTag(self, imageId):
         ret = self.request("index/images/%s/tag" % str(imageId), "DELETE")
         self.raiseExceptionIfNeeded(ret["type"])
 
