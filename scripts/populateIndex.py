@@ -105,6 +105,6 @@ if __name__ == "__main__":
         print("A data file needs to be specified via the --datafile argument")
         sys.exit(1)
     if performIndexing(options):
-        echo("OK")
+        print("OK")
     else:
-        echo("FAIL")
+        print("FAIL")
