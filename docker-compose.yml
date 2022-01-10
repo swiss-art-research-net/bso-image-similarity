@@ -11,4 +11,5 @@ services:
     build: ./services/jobs
     container_name: ${PROJECT_NAME}_jobs
     volumes:
+      - ./data:/data
       - ./scripts:/scripts
