@@ -9,6 +9,11 @@ vars:
   INDEX_FILE: /pastec/build/pastec-index/index.dat
 
 tasks:
+  load-index:
+    desc: Load the index from a file
+    cmds:
+      - curl -X POST -d '{"type":"LOAD", "index_path":"{{.INDEX_FILE}}"}' "http://$PASTEC_HOST:$PASTEC_PORT/index/io"
+
   populate-index:
     desc: Populate the Pastec index with image data from  BSO
     cmds:
@@ -17,6 +22,6 @@ tasks:
   save-index:
     desc: Save the index to a file
     cmds:
-    - curl -X POST -d '{"type":"WRITE", "index_path":"{{.INDEX_FILE}}"}' "http://$PASTEC_HOST:$PASTEC_PORT/index/io"
+      - curl -X POST -d '{"type":"WRITE", "index_path":"{{.INDEX_FILE}}"}' "http://$PASTEC_HOST:$PASTEC_PORT/index/io"
 
 
