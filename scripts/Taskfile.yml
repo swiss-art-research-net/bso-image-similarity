@@ -19,6 +19,11 @@ tasks:
     cmds:
       - python populateIndex.py --endpoint $SPARQL_ENDPOINT --pastecHost $PASTEC_HOST --pastecPort $PASTEC_PORT --datafile $DATAFILE --logfile $LOGFILE --limit $LIMIT
 
+  retrieve-all-similar-images:
+      desc: Query the database for image regions and retrieve all similar images
+      cmds:
+        - python retrieveAllSimilarImages.py --endpoint $SPARQL_ENDPOINT --pastecHost $PASTEC_HOST --pastecPort $PASTEC_PORT --datafile $DATAFILE --logfile $LOGFILE --outputfile $RESULTS_JSON --limit $LIMIT
+
   query-image:
     desc: Search for an image in the Pastec index by URL
     cmds:
