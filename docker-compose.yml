@@ -11,5 +11,6 @@ services:
     build: ./services/jobs
     container_name: ${PROJECT_NAME}_jobs
     volumes:
+      - .env:/dotenv/.env
       - ./data:/data
       - ./scripts:/scripts

@@ -22,6 +22,7 @@ def performIndexing(options):
     sparqlEndpoint = options['endpoint']
     pastecHost = options['pastecHost']
     pastecPort = options['pastecPort']
+    logfile = options['logfile']
     limit = options['limit'] if 'limit' in options else None
     
     # Retrieve existing data from file
@@ -69,9 +70,21 @@ def performIndexing(options):
             newData.append(dataToAdd)
 
     # Index data
+    notIndexed = []
     pastec = PastecConnection(pastecHost=pastecHost, pastecPort=pastecPort)
     for row in tqdm(newData):
-        pastec.indexImageUrl(row['index'], row['image'] + '/full/800,/0/default.jpg')
+        try:
+            pastec.indexImageUrl(row['index'], row['image'] + '/full/800,/0/default.jpg')
+        except:
+            # If the image could not be indexed, it might be because it is too small.
+            # This can happen if the image is a wide landscape format, which will not
+            # be high enough if requested with a width of 800px.
+            # Therefore, we will try again and request the image with a height of 800px instead.
+            try:
+                pastec.indexImageUrl(row['index'], row['image'] + '/full/,800/0/default.jpg')
+            except:
+                # If we still fail to index the image, it is added to the list of images that could not be indexed.
+                notIndexed.append(row)
 
     # Store data
     with open(datafile, 'w') as f:
@@ -81,6 +94,17 @@ def performIndexing(options):
         for row in data:
             writer.writerow(row)
 
+    # Print information about images that could not be indexed
+    if len(notIndexed) > 0:
+        with open(logfile, 'a') as f:
+            f.write("============================================================\n")
+            now = datetime.now()
+            dt_string = now.strftime("%Y-%m-%d %H:%M:%S")
+            f.write("Indexing performed: " + dt_string + "\n")
+            f.write("Could not index the following images:\n")
+            for row in notIndexed:
+                f.write(row['image'] + '\n')
+        
     return True
 
 if __name__ == "__main__":
@@ -104,6 +128,8 @@ if __name__ == "__main__":
     if not 'datafile' in options:
         print("A data file needs to be specified via the --datafile argument")
         sys.exit(1)
+    if not 'logfile' in options:
+        options['logfile'] = 'log.txt'
     if performIndexing(options):
         print("OK")
     else:

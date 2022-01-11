@@ -2,10 +2,30 @@
 ## About
 
 This stack implements a [Pastec](https://github.com/swiss-art-research-net/pastec) instance and a service to use it within the [BSO](https://github.com/swiss-art-research-net/bso-data-pipeline) project 
+## Usage
 
-## Prerequisites
+1. Copy provided `.env.example` file:
+    * `cp .env.example .env`
+1. Edit content of `.env` file if necessary
+    * Refer to the comments in the `.env` file for the meaning of the configuration parameters
+1. Make sure that the specified SPARQL endpoint is reachable from the Docker container. If necessary, connect the Docker container to the correct Docker network. This can be done manually or by creating a `docker-compose.override.yml`. For example:
+    * ```yaml
+      version: "3.3"
+      services:
+      pastec:
+          networks:
+          - default
+      jobs:
+          networks:
+          - default
+          - external_docker_network
+      
+      networks:
+      default: null
+      external_docker_network:
+          name: bso-staging_default # Name of the external docker network
+      ```
 
-Assumes a Blazegraph endpoint is accessible at http://blazegraph:8080/blazegraph/sparql. Connect the Docker container to the correct Docker network if necessary
 ## Populate Index
 
 ```
