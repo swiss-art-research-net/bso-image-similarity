@@ -26,8 +26,20 @@ This stack implements a [Pastec](https://github.com/swiss-art-research-net/paste
           name: bso-staging_default # Name of the external docker network
       ```
 
-## Populate Index
+## Usage
 
+The jobs service can be controlled through running tasks. To display a list of available tasks, run (change name of docker container, if required)
+```bash
+docker exec bso_image_similarity_jobs task --list
 ```
+This will output a list of tasks:
+```                            
+task: Available tasks for this project:
+* load-index:           Load the index from a file
+* populate-index:       Populate the Pastec index with image data from  BSO
+* save-index:           Save the index to a file
+```
+Run a given task by specifying its name. For example, to populate the index, run:
+```bash
 docker exec bso_image_similarity_jobs task populate-index
 ```
