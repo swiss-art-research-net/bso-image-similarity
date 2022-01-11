@@ -125,6 +125,19 @@ class PastecConnection:
             res += [(imageIds[i], tags[i])]
         return res
 
+    def imageQueryUrl(self, imageUrl):
+        data = {"url": imageUrl}
+        ret = self.request("index/searcher", "POST", json.dumps(data).encode('utf-8'))
+        self.raiseExceptionIfNeeded(ret["type"])
+        imageIds = ret["image_ids"]
+        tags = ret["tags"]
+        res = []
+        if len(imageIds) != len(tags):
+            raise PastecException("Image ids and tags arrays have different sizes.")
+        for i in range(len(imageIds)):
+            res += [(imageIds[i], tags[i])]
+        return res
+
     def ping(self):
         s = json.dumps({"type" : "PING"})
         ret = self.request("", "POST", bytearray(s, "UTF-8"))
