@@ -77,8 +77,16 @@ def performRetrieval(options):
     
     output = {}
     for row in tqdm(imagesToQuery):
-        url = row['image'] + "/" + row['crop'] + "/800,/0/default.jpg"
-        results = pastec.imageQueryUrl(url)
+        urlLandscape = row['image'] + "/" + row['crop'] + "/800,/0/default.jpg"
+        urlPortrait= row['image'] + "/" + row['crop'] + "/,800/0/default.jpg"
+        try:
+            results = pastec.imageQueryUrl(urlLandscape)
+        except:
+            try:
+                results = pastec.imageQueryUrl(urlPortrait)
+            except:
+                continue
+                
         output[row['image']] = []
         for result in results:
             if str(result[0]) in keys:
