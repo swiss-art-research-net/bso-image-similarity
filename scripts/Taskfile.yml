@@ -5,6 +5,9 @@ version: '3'
 dotenv:
   - /dotenv/.env
 
+vars:
+  INDEX_FILE: /pastec/build/pastec-index/index.dat
+
 tasks:
   populate-index:
     desc: Populate the Pastec index with image data from  BSO
@@ -14,6 +17,6 @@ tasks:
   save-index:
     desc: Save the index to a file
     cmds:
-    - curl -X POST -d '{"type":"WRITE", "index_path":"/pastec/build/pastec-index/index.dat"}' "http://$PASTEC_HOST:$PASTEC_PORT/index/io"
+    - curl -X POST -d '{"type":"WRITE", "index_path":"{{.INDEX_FILE}}"}' "http://$PASTEC_HOST:$PASTEC_PORT/index/io"
 
 
