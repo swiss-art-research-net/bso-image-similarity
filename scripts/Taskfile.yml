@@ -18,10 +18,13 @@ tasks:
     desc: Populate the Pastec index with image data from  BSO
     cmds:
       - python populateIndex.py --endpoint $SPARQL_ENDPOINT --pastecHost $PASTEC_HOST --pastecPort $PASTEC_PORT --datafile $DATAFILE --logfile $LOGFILE --limit $LIMIT
+
+  query-image:
+    desc: Search for an image in the Pastec index by URL
+    cmds:
+      - python queryImage.py --endpoint $SPARQL_ENDPOINT --pastecHost $PASTEC_HOST --pastecPort $PASTEC_PORT --datafile $DATAFILE --logfile $LOGFILE --limit $LIMIT --imageUrl {{.CLI_ARGS}}
   
   save-index:
     desc: Save the index to a file
     cmds:
       - curl -X POST -d '{"type":"WRITE", "index_path":"{{.INDEX_FILE}}"}' "http://$PASTEC_HOST:$PASTEC_PORT/index/io"
-
-
