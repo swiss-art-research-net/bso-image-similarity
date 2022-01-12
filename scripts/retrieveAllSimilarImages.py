@@ -86,7 +86,6 @@ def performRetrieval(options):
                 results = pastec.imageQueryUrl(urlPortrait)
             except:
                 continue
-                
         output[row['image']] = []
         for result in results:
             if str(result[0]) in keys:

@@ -3,6 +3,9 @@ RUN pip install requests tqdm sparqlwrapper
 
 # Prepare directories and volumes
 RUN mkdir /scripts
+RUN mkdir /dotenv
+RUN touch /dotenv/.env
+VOLUME /dotenv/.env
 VOLUME /static
 WORKDIR /scripts
 
