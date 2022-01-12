@@ -33,12 +33,13 @@ The jobs service can be controlled through running tasks. To display a list of a
 docker exec bso_image_similarity_jobs task --list
 ```
 This will output a list of tasks:
-```                            
+```
 task: Available tasks for this project:
-* load-index:           Load the index from a file
-* populate-index:       Populate the Pastec index with image data from  BSO
-* query-image:          Search for an image in the Pastec index by URL
-* save-index:           Save the index to a file
+* load-index:                   Load the index from a file
+* populate-index:               Populate the Pastec index with image data from  BSO
+* query-image:                  Search for an image in the Pastec index by URL
+* retrieve-all-similar-images:  Query the database for image regions and retrieve all similar images
+* save-index:                   Save the index to a file
 ```
 Run a given task by specifying its name. For example, to populate the index, run:
 ```bash
