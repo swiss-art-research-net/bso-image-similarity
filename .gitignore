@@ -4,4 +4,3 @@ data
 __pycache__
 .ipynb_checkpoints
 docker-compose.override.yml
-pastec-index/*.dat

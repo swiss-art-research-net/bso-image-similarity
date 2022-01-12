@@ -45,6 +45,13 @@ Run a given task by specifying its name. For example, to populate the index, run
 docker exec bso_image_similarity_jobs task populate-index
 ```
 
+##  Initialise
+
+Load the index by running the `load-index` task:
+```bash
+docker exec bso_image_similarity_jobs task --list
+```
+
 ## Query
 
 To look for similar images based on a single image, pass its URL to the `query-image` task:
