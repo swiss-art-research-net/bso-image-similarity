@@ -50,7 +50,7 @@ docker exec bso_image_similarity_jobs task populate-index
 
 Load the index by running the `load-index` task:
 ```bash
-docker exec bso_image_similarity_jobs task --list
+docker exec bso_image_similarity_jobs task load-index
 ```
 
 ## Query
