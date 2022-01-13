@@ -48,7 +48,11 @@ def performRetrieval(options):
     { ?subject  a  search:Object .
         ?subject ((crm:P128_carries/la:digitally_shown_by)/la:digitally_available_via)/la:access_point ?image
         OPTIONAL
-        { ?bbox ^rso:boundingBox/crmdig:L49_is_primary_area_of ?image }
+        { 
+            ?region crmdig:L49_is_primary_area_of ?image ;
+                    rso:boundingBox ?bbox ;
+                    crm:P2_has_type <https://resource.swissartresearch.net/type/imageRegion> .
+        }
         BIND(if(bound(?bbox), strafter(?bbox, "xywh="), "full") AS ?crop)
     }
     ORDER BY DESC(?subject)
