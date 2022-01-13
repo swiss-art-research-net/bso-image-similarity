@@ -9,6 +9,12 @@ vars:
   INDEX_FILE: /pastec/build/pastec-index/index.dat
 
 tasks:
+
+  generate-rdf-output:
+      desc: Generate RDF output based on the results JSON file
+      cmds:
+        - python generateRDFoutput.py --inputfile $RESULTS_JSON --outputfile $RESULTS_RDF
+
   load-index:
     desc: Load the index from a file
     cmds:
