@@ -53,7 +53,7 @@ def performRetrieval(options):
                     rso:boundingBox ?bbox ;
                     crm:P2_has_type <https://resource.swissartresearch.net/type/imageRegion> .
         }
-        BIND(if(bound(?bbox), strafter(?bbox, "xywh="), "pct:12,10,75,75") AS ?crop)
+        BIND(if(bound(?bbox), strafter(?bbox, "xywh="), "pct:25,25,50,50") AS ?crop)
     }
     ORDER BY DESC(?subject)
     """

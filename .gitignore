@@ -1,6 +1,6 @@
 .env
-data
-!data/.gitkeep
+data/*.json
+data/*.ttl
 __pycache__
 .ipynb_checkpoints
 docker-compose.override.yml
