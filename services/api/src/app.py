@@ -33,7 +33,6 @@ def createSparqlResponse(parsedQuery, processedRequests):
   def getDataTypeForValue(value):
       if isinstance(value, int):
           return "http://www.w3.org/2001/XMLSchema#integer"
-      return "http://www.w3.org/2001/XMLSchema#string"
 
   response = {}
   response['head'] = {
@@ -53,8 +52,7 @@ def createSparqlResponse(parsedQuery, processedRequests):
         if variable in entry:
           row[variable] = {
             "value": entry[variable],
-            "type": "literal",
-            "datatype": getDataTypeForValue(entry[variable])
+            "type": "uri"
           }
       bindings.append(row)
   response['results'] = {'bindings': bindings}
@@ -121,7 +119,6 @@ def requestSimilarImage(request):
     pastec = PastecConnection(PASTEC_HOST, PASTEC_PORT)
 
     url = request['subject']
-    url = 'https://www.e-rara.ch/zuz/i3f/v20/17367106/98,116,9034,6658/300,/0/default.jpg'
     requestResult = {
         'url': url,
         'results': []
