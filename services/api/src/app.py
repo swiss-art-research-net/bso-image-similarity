@@ -41,7 +41,6 @@ def createSparqlResponse(parsedQuery, processedRequests):
   }
   bindings = []
   for request in processedRequests:
-    app.logger.info(request)
     if parsedQuery['limitOffset']:
       offset = parsedQuery['limitOffset']['offset'] if 'offset' in parsedQuery['limitOffset'] else 0
       limit = parsedQuery['limitOffset']['limit'] if  'limit' in parsedQuery['limitOffset'] else len(request)
@@ -64,21 +63,28 @@ def createSparqlResponse(parsedQuery, processedRequests):
 
 def extractRequestFromQueryData(data):
     pastecPrefix = 'http://service.swissartresearch.net/pastec/'
-
+  
+    def getAttribute(value):
+        return value[len(pastecPrefix):]
+        
     requests = []
     for triple in data['where']:
         if triple['s']['type'] == URIRef and triple['p']['value'] == "http://www.w3.org/1999/02/22-rdf-syntax-ns#type":
             requests.append({
-                'subject': triple['s']['value']
+              "subject": triple['s']['value'],
+              "retrieve": {},
+              "send": {},
+              "type": triple['o']['value']
             })
     for request in requests:
         for triple in data['where']:
-            if triple['s']['value'] == request['subject']:
-                if triple['p']['value'] == pastecPrefix + "hasSimilarImage":
-                    request['type'] = REQUEST_SIMILAR_IMAGE
-                    if triple['o']['type'] == Variable:
-                        request['variable'] = triple['o']['value']
-    
+          if triple['s']['type'] == URIRef and triple['s']['value'] == request['subject']:
+              if getAttribute(triple['p']['value']).startswith('has'):
+                  if triple['o']['type'] == Variable:
+                      request['retrieve'][getAttribute(triple['p']['value'])] = triple['o']['value']
+                  if triple['o']['type'] == Literal:
+                      request['send'][getAttribute(triple['p']['value'])] = triple['o']['value']
+
     return requests
 
 
@@ -97,26 +103,9 @@ def loadImageData(datafile):
 
 def processPastecApiRequests(requests):
     ret = []
-    pastec = PastecConnection(PASTEC_HOST, PASTEC_PORT)
     for request in requests:
-        app.logger.info(request)
-        if  request['type'] == 'similarImage':
-            url = request['subject']
-            url = 'https://www.e-rara.ch/zuz/i3f/v20/17367106/98,116,9034,6658/300,/0/default.jpg'
-            requestResult = {
-                'url': url,
-                'results': []
-            }
-            results = pastec.imageQueryUrl(url)
-            for result in results:
-                if str(result[0]) in imageKeys:
-                    requestResult['results'].append({
-                        'entity': imageKeys[str(result[0])]['subject'],
-                        'image': imageKeys[str(result[0])]['image'],
-                    })
-                else:
-                    print("Could not find key for", result[0])
-            ret.append(requestResult)
+        if  request['type'] == 'http://service.swissartresearch.net/pastec/Image':
+            ret.append(requestSimilarImage(request))
     return ret
 
 
@@ -124,8 +113,33 @@ def processQuery(query):
     requests = extractRequestFromQueryData(query)
     processedRequests = processPastecApiRequests(requests)
     response = createSparqlResponse(query, processedRequests)
-    #app.logger.info(response)
-    return {}
+    return response
+
+def requestSimilarImage(request):
+    data = []
+    
+    pastec = PastecConnection(PASTEC_HOST, PASTEC_PORT)
+
+    url = request['subject']
+    url = 'https://www.e-rara.ch/zuz/i3f/v20/17367106/98,116,9034,6658/300,/0/default.jpg'
+    requestResult = {
+        'url': url,
+        'results': []
+    }
+    results = pastec.imageQueryUrl(url)
+    for result in results:
+        if str(result[0]) in imageKeys:
+            response = {
+                "hasSimilarEntity": imageKeys[str(result[0])]['subject'],
+                "hasSimilarImage": imageKeys[str(result[0])]['image']
+            }
+            row = {}
+            for key, variable in request['retrieve'].items():
+                row[variable] = response[key]
+            data.append(row)
+        else:
+            print("Could not find key for", result[0])
+    return data
 
 @app.route('/')
 def index():
